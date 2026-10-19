@@ -1,5 +1,5 @@
 // Extracted verbatim from AtraApp.tsx; markup and classes unchanged.
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import {
   demoCustomers,
   orderStatuses,
@@ -9,7 +9,7 @@ import {
   type CustomerType,
   type OrderStatus,
 } from "./crm-data";
-import { Icon, Header, Modal, EmptyTab, type Page } from "./shared";
+import { Icon, Header, Modal, EmptyTab, type IconName, type Page } from "./shared";
 
 export function CustomerForm({ customer, onSave, onClose }: { customer?: Customer; onSave: (customer: Customer) => void; onClose: () => void }) {
   function submit(event: FormEvent<HTMLFormElement>) {

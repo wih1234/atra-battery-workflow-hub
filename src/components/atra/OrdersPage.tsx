@@ -9,7 +9,7 @@ import {
   type CustomerType,
   type OrderStatus,
 } from "./crm-data";
-import { Icon, Header, Modal, EmptyTab, type Page } from "./shared";
+import { Icon, Header, Modal, EmptyTab, type IconName, type Page } from "./shared";
 
 export const orderTone: Record<OrderStatus, string> = {
   "ثبت سفارش": "info", "تأیید قیمت": "warning", "مونتاژ": "purple", "کنترل کیفیت": "info", "آماده تحویل": "success", "تحویل‌شده": "success", "انتظار قطعه": "danger", "تحویل جزئی": "warning", "لغوشده": "danger",

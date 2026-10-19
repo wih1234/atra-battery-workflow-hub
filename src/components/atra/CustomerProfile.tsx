@@ -9,7 +9,7 @@ import {
   type CustomerType,
   type OrderStatus,
 } from "./crm-data";
-import { Icon, Header, Modal, EmptyTab, type Page } from "./shared";
+import { Icon, Header, Modal, EmptyTab, type IconName, type Page } from "./shared";
 
 export function CustomerProfile({ customer, onBack, onEdit, orders }: { customer: Customer; onBack: () => void; onEdit: () => void; orders: BatteryOrder[] }) {
   const [tab, setTab] = useState("نمای کلی");

@@ -9,7 +9,7 @@ import {
   type CustomerType,
   type OrderStatus,
 } from "./crm-data";
-import { Icon, Header, Modal, EmptyTab, type Page } from "./shared";
+import { Icon, Header, Modal, EmptyTab, type IconName, type Page } from "./shared";
 
 export type ChatMessage = { id: number; role: "assistant" | "user"; text: string };
 export const assistantSuggestions = ["مشتریان نیازمند پیگیری را نشان بده", "سفارش‌های معوق کدام‌اند؟", "برنامه امروز من چیست؟"];

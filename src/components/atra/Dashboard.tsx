@@ -9,7 +9,7 @@ import {
   type CustomerType,
   type OrderStatus,
 } from "./crm-data";
-import { Icon, Header, Modal, EmptyTab, type Page } from "./shared";
+import { Icon, Header, Modal, EmptyTab, type IconName, type Page } from "./shared";
 
 export function StatCard({ title, value, detail, icon, tone, trend }: { title: string; value: string; detail: string; icon: IconName; tone: string; trend?: string }) {
   return (

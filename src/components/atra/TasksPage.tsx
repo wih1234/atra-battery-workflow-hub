@@ -9,7 +9,7 @@ import {
   type CustomerType,
   type OrderStatus,
 } from "./crm-data";
-import { Icon, Header, Modal, EmptyTab, type Page } from "./shared";
+import { Icon, Header, Modal, EmptyTab, type IconName, type Page } from "./shared";
 
 export function TaskForm({ customers, onSave, onClose }: { customers: Customer[]; onSave: (task: CrmTask) => void; onClose: () => void }) {
   function submit(event: FormEvent<HTMLFormElement>) {
