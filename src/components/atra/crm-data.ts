@@ -36,6 +36,8 @@ export type BatteryOrder = {
   amount: string;
   deliveryDate: string;
   status: OrderStatus;
+  /** Append-only status log; optional so older saved demo orders still load. */
+  history?: { from: OrderStatus; to: OrderStatus; at: string }[];
 };
 
 export type CrmTask = {

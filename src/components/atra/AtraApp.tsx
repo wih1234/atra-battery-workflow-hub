@@ -7,6 +7,7 @@ import { CustomerForm, CustomersPage } from "./CustomersPage";
 import { OrderForm, OrdersPage } from "./OrdersPage";
 import { TaskForm, TasksPage } from "./TasksPage";
 import { AssistantPage } from "./AssistantPage";
+import { transitionOrder } from "./order-workflow";
 import { usePersistentState } from "./usePersistentState";
 
 export default function App() {
@@ -27,7 +28,7 @@ export default function App() {
   function renderPage() {
     if (page === "مشتریان") return <CustomersPage customers={customers} onCreate={() => setModal("customer")} onOpen={(customer) => { setSelectedCustomerId(customer.id); setPage("پرونده مشتری"); }}/>;
     if (page === "پرونده مشتری" && selectedCustomer) return <CustomerProfile customer={selectedCustomer} orders={orders.filter((order) => order.customerId === selectedCustomer.id)} onBack={() => setPage("مشتریان")} onEdit={() => setModal("edit-customer")}/>;
-    if (page === "سفارش‌ها") return <OrdersPage orders={orders} customers={customers} onCreate={() => setModal("order")} onStatusChange={(id, status) => setOrders((current) => current.map((order) => order.id === id ? { ...order, status } : order))}/>;
+    if (page === "سفارش‌ها") return <OrdersPage orders={orders} customers={customers} onCreate={() => setModal("order")} onStatusChange={(id, status) => setOrders((current) => current.map((order) => order.id === id ? transitionOrder(order, status).order : order))}/>;
     if (page === "وظایف و تقویم") return <TasksPage tasks={tasks} onCreate={() => setModal("task")} onToggle={(id) => setTasks((current) => current.map((task) => task.id === id ? { ...task, completed: !task.completed } : task))}/>;
     if (page === "دستیار هوشمند") return <AssistantPage tasks={tasks} orders={orders}/>;
     return <Dashboard setPage={setPage} openQuickAdd={quickAdd}/>;
@@ -40,7 +41,7 @@ export default function App() {
       <MobileNav page={page} setPage={setPage} onQuickAdd={quickAdd}/>
       {modal === "customer" && <CustomerForm onClose={() => setModal(null)} onSave={(customer) => { setCustomers((current) => [customer, ...current]); setModal(null); setSelectedCustomerId(customer.id); setPage("پرونده مشتری"); }}/>}
       {modal === "edit-customer" && selectedCustomer && <CustomerForm customer={selectedCustomer} onClose={() => setModal(null)} onSave={(customer) => { setCustomers((current) => current.map((item) => item.id === customer.id ? customer : item)); setModal(null); }}/>}
-      {modal === "order" && <OrderForm customers={customers} onClose={() => setModal(null)} onSave={(order) => { setOrders((current) => [order, ...current]); setModal(null); setPage("سفارش‌ها"); }}/>}
+      {modal === "order" && <OrderForm customers={customers} orders={orders} onClose={() => setModal(null)} onSave={(order) => { setOrders((current) => [order, ...current]); setModal(null); setPage("سفارش‌ها"); }}/>}
       {modal === "task" && <TaskForm customers={customers} onClose={() => setModal(null)} onSave={(task) => { setTasks((current) => [task, ...current]); setModal(null); setPage("وظایف و تقویم"); }}/>}
     </div>
   );

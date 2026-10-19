@@ -9,21 +9,25 @@ import {
   type CustomerType,
   type OrderStatus,
 } from "./crm-data";
+import { canTransition, nextOrderId, parseQuantity } from "./order-workflow";
 import { Icon, Header, Modal, EmptyTab, type IconName, type Page } from "./shared";
 
 export const orderTone: Record<OrderStatus, string> = {
   "ثبت سفارش": "info", "تأیید قیمت": "warning", "مونتاژ": "purple", "کنترل کیفیت": "info", "آماده تحویل": "success", "تحویل‌شده": "success", "انتظار قطعه": "danger", "تحویل جزئی": "warning", "لغوشده": "danger",
 };
 
-export function OrderForm({ customers, onSave, onClose }: { customers: Customer[]; onSave: (order: BatteryOrder) => void; onClose: () => void }) {
+export function OrderForm({ customers, orders, onSave, onClose }: { customers: Customer[]; orders: BatteryOrder[]; onSave: (order: BatteryOrder) => void; onClose: () => void }) {
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+    const quantity = parseQuantity(form.get("quantity"));
+    const customerId = String(form.get("customerId"));
+    if (quantity === null || !customers.some((customer) => customer.id === customerId)) return;
     onSave({
-      id: `سفارش ${String(Date.now()).slice(-4)}`,
-      customerId: String(form.get("customerId")),
+      id: nextOrderId(orders),
+      customerId,
       batteryModel: String(form.get("batteryModel")),
-      quantity: Number(form.get("quantity")),
+      quantity,
       amount: String(form.get("amount")),
       deliveryDate: String(form.get("deliveryDate")),
       status: "ثبت سفارش",
@@ -62,7 +66,7 @@ export function OrdersPage({ orders, customers, onCreate, onStatusChange }: { or
           <div className="crm-table-head"><span>شماره و مشتری</span><span>مدل باتری</span><span>تعداد</span><span>مبلغ</span><span>تاریخ تحویل</span><span>وضعیت سفارش</span></div>
           {filtered.map((order) => <div className="crm-table-row" key={order.id}>
             <span className="order-identity"><strong>{order.id}</strong><small>{customerName(order.customerId)}</small></span><span>{order.batteryModel}</span><span>{order.quantity} عدد</span><span>{order.amount} تومان</span><span>{order.deliveryDate}</span>
-            <span><select className={`status-select ${orderTone[order.status]}`} value={order.status} onChange={(event) => onStatusChange(order.id, event.target.value as OrderStatus)}>{orderStatuses.map((status) => <option key={status}>{status}</option>)}</select></span>
+            <span><select className={`status-select ${orderTone[order.status]}`} value={order.status} onChange={(event) => onStatusChange(order.id, event.target.value as OrderStatus)}>{orderStatuses.map((status) => <option key={status} disabled={status !== order.status && !canTransition(order.status, status)}>{status}</option>)}</select></span>
           </div>)}
         </div>
       </section>

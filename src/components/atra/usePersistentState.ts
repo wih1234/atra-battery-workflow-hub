@@ -5,13 +5,17 @@ import { useEffect, useState } from "react";
  * server render and first client render match (no hydration mismatch), and only
  * writes back once the saved value has been loaded.
  */
-export function usePersistentState<T>(key: string, initialValue: T) {
+export function usePersistentState<T>(key: string, initialValue: T, isValid: (value: unknown) => value is T = (v): v is T => Array.isArray(v) === Array.isArray(initialValue)) {
   const [value, setValue] = useState<T>(initialValue);
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     try {
       const saved = window.localStorage.getItem(key);
-      if (saved) setValue(JSON.parse(saved) as T);
+      if (saved) {
+        const parsed: unknown = JSON.parse(saved);
+        // Ignore saved data of the wrong shape instead of crashing the screen.
+        if (isValid(parsed)) setValue(parsed);
+      }
     } catch {
       // Corrupt or unavailable storage: keep the initial demo data.
     }
