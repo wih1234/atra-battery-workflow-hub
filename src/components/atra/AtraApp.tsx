@@ -236,7 +236,7 @@ function Dashboard({ setPage, openQuickAdd }: { setPage: (page: Page) => void; o
               ["توسعه انرژی پویا","رضا عزیزی","امروز","۱۹۰ میلیون","علی رضایی","پیش‌فاکتور","info","ت"],
             ].map((row) => <button className="table-row" key={row[0]}>
               <span className="customer-name"><b className="mini-avatar">{row[7]}</b><span><strong>{row[0]}</strong><small>{row[1]}</small></span></span>
-              <span>{row[2]}</span><span>{row[3]}</span><span className="assignee"><b>{row[4].slice(0,1)}</b>{row[4]}</span><span><i className={`status ${row[6]}`}>{row[5]}</i></span><Icon name="chevron" size={17}/>
+              <span>{row[2]}</span><span>{row[3]}</span><span className="assignee"><b>{(row[4] ?? "").slice(0,1)}</b>{row[4]}</span><span><i className={`status ${row[6]}`}>{row[5]}</i></span><Icon name="chevron" size={17}/>
             </button>)}
           </div>
         </section>
@@ -560,7 +560,7 @@ export default function App() {
   const [customers, setCustomers] = usePersistentState("ata-demo-customers", demoCustomers);
   const [orders, setOrders] = usePersistentState("ata-demo-orders", demoOrders);
   const [tasks, setTasks] = usePersistentState("ata-demo-tasks", demoTasks);
-  const [selectedCustomerId, setSelectedCustomerId] = useState(demoCustomers[0].id);
+  const [selectedCustomerId, setSelectedCustomerId] = useState(demoCustomers[0]?.id ?? "");
   const [modal, setModal] = useState<"customer" | "edit-customer" | "order" | "task" | null>(null);
   const selectedCustomer = customers.find((customer) => customer.id === selectedCustomerId) ?? customers[0];
 
