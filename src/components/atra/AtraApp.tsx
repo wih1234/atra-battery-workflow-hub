@@ -1,15 +1,13 @@
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
-import {
-  demoCustomers,
-  demoOrders,
-  demoTasks,
-  orderStatuses,
-  type BatteryOrder,
-  type CrmTask,
-  type Customer,
-  type CustomerType,
-  type OrderStatus,
-} from "./crm-data";
+import { useState } from "react";
+import { demoCustomers, demoOrders, demoTasks } from "./crm-data";
+import { MobileNav, Sidebar, type Page } from "./shared";
+import { Dashboard } from "./Dashboard";
+import { CustomerProfile } from "./CustomerProfile";
+import { CustomerForm, CustomersPage } from "./CustomersPage";
+import { OrderForm, OrdersPage } from "./OrdersPage";
+import { TaskForm, TasksPage } from "./TasksPage";
+import { AssistantPage } from "./AssistantPage";
+import { usePersistentState } from "./usePersistentState";
 
 export default function App() {
   const [page, setPage] = useState<Page>("داشبورد");
@@ -48,30 +46,3 @@ export default function App() {
   );
 }
 
-/**
- * Browser-only persistence for the demo data. Reads storage after mount so the
- * server render and first client render match (no hydration mismatch), and only
- * writes back once the saved value has been loaded.
- */
-function usePersistentState<T>(key: string, initialValue: T) {
-  const [value, setValue] = useState<T>(initialValue);
-  const [loaded, setLoaded] = useState(false);
-  useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(key);
-      if (saved) setValue(JSON.parse(saved) as T);
-    } catch {
-      // Corrupt or unavailable storage: keep the initial demo data.
-    }
-    setLoaded(true);
-  }, [key]);
-  useEffect(() => {
-    if (!loaded) return;
-    try {
-      window.localStorage.setItem(key, JSON.stringify(value));
-    } catch {
-      // Storage full or blocked: changes stay in memory for this session.
-    }
-  }, [key, value, loaded]);
-  return [value, setValue] as const;
-}

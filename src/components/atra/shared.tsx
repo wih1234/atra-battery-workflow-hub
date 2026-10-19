@@ -10,7 +10,6 @@ import {
   type CustomerType,
   type OrderStatus,
 } from "./crm-data";
-import { Icon, Header, Modal, EmptyTab, type Page } from "./shared";
 
 export type Page = "داشبورد" | "مشتریان" | "پرونده مشتری" | "وظایف و تقویم" | "سفارش‌ها" | "دستیار هوشمند";
 
