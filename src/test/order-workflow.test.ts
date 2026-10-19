@@ -16,7 +16,7 @@ const order = (status: BatteryOrder["status"]): BatteryOrder => ({
 describe("order status transitions", () => {
   it("allows the documented main path step by step", () => {
     const path = ["ثبت سفارش", "تأیید قیمت", "مونتاژ", "کنترل کیفیت", "آماده تحویل", "تحویل‌شده"] as const;
-    for (let i = 0; i < path.length - 1; i++) expect(canTransition(path[i], path[i + 1])).toBe(true);
+    path.slice(1).forEach((to, i) => expect(canTransition(path[i]!, to)).toBe(true));
   });
   it("blocks skipping stages", () => {
     expect(canTransition("ثبت سفارش", "مونتاژ")).toBe(false);

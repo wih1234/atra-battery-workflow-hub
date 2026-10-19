@@ -53,7 +53,7 @@ export function transitionOrder(order: BatteryOrder, to: OrderStatus, at: Date =
 
 const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
 const toLatin = (s: string) => s.replace(/[۰-۹]/g, (d) => String(persianDigits.indexOf(d)));
-const toPersian = (n: number) => String(n).replace(/\d/g, (d) => persianDigits[Number(d)]);
+const toPersian = (n: number) => String(n).replace(/\d/g, (d) => persianDigits[Number(d)] ?? d);
 
 /** Next sequential order id ("سفارش ۲۴۸۲"), unique among existing orders (replaces Date.now() slicing). */
 export function nextOrderId(orders: Pick<BatteryOrder, "id">[]): string {
