@@ -33,7 +33,7 @@ export function isOrderStatus(value: unknown): value is OrderStatus {
 }
 
 export function canTransition(from: OrderStatus, to: OrderStatus): boolean {
-  return allowedTransitions[from].includes(to);
+  return allowedTransitions[from]?.includes(to) ?? false;
 }
 
 export type TransitionResult =
