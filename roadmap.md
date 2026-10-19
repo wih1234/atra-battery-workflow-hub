@@ -1,9 +1,13 @@
 # ATRA roadmap
 - [x] Phase 1 audit (docs/ATRA-AUDIT.md) + port approved UI unchanged
 - [x] SSR-safe local persistence, type fixes, RTL/lang
-- [ ] Split AtraApp.tsx per screen + per-page URLs
-- [ ] Order status transition rules + history + tests
-- [ ] Numeric money, real dates with Jalali display
+- [x] Split AtraApp.tsx per screen (pixel-identical)
+- [x] Order status transition rules + history + tests
+- [x] Safe data-integrity fixes (order ids, quantity, storage validation)
+- [ ] Per-page URLs
+- [ ] Task → customer id link
+- [ ] Order workflow open questions (blocked: user decisions, see audit §10)
+- [ ] Numeric money, real dates with Jalali display (blocked: currency decision)
 - [ ] Enable Lovable Cloud (blocked: user approval)
-- [ ] Customer types / roles / currency (blocked: user decisions)
+- [ ] Customer types / roles / brand name (blocked: user decisions)
 - [ ] Mahak read-only import (blocked: Mahak version & export format)

@@ -13,3 +13,5 @@
 - The ATRA UI ported from Figma Make (`src/components/atra/`, ATRA section of `src/styles.css`) is the approved design; reuse its CSS classes and variables for new screens instead of shadcn defaults, because visual identity must not drift.
 - Demo fixtures live in `src/components/atra/crm-data.ts` and must stay clearly labeled demo; never present them as real business metrics.
 - Browser storage must be read after mount (never in render/initializers) to avoid SSR hydration mismatches.
+- Each ATRA screen lives in its own file under `src/components/atra/`; `AtraApp.tsx` only holds app state and wiring, so screens can change independently.
+- Order status changes go through the pure `order-workflow.ts` (allowed-transition table + append-only history), so rules are testable and never bypassed by the UI.

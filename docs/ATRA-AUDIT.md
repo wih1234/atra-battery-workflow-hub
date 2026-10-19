@@ -83,4 +83,31 @@ Lovable supports workspace skills (Settings → Skills). None are required to pr
 
 ## 9. Safe changes (no UI change)
 Done: port, SSR-safe storage, strict type fixes, RTL `<html>`, page metadata.
-Next: file split, order transition rules + tests, numeric/date model, per-page URLs, accessibility labels on icon-only buttons.
+Phase 2 done (see §10). Next: per-page URLs, accessibility labels on icon-only buttons, task→customer id link.
+
+## 10. Phase 2 — low-risk engineering (2026-10-19)
+**File split (no visual change).** `AtraApp.tsx` (621 lines) → `shared.tsx` (icons, header, sidebar, modal, mobile nav), `Dashboard`, `CustomerProfile`, `CustomersPage`, `OrdersPage`, `TasksPage`, `AssistantPage`, `usePersistentState.ts`; `AtraApp.tsx` keeps only app state. Markup copied verbatim. Verified: desktop (1280px, 6 screens) and phone (390px, 5 screens) screenshots are pixel-identical to the pre-change baseline.
+
+**Order workflow** (`order-workflow.ts`, pure):
+| From | Allowed next |
+|---|---|
+| ثبت سفارش | تأیید قیمت, لغوشده |
+| تأیید قیمت | مونتاژ, لغوشده |
+| مونتاژ | کنترل کیفیت, انتظار قطعه, لغوشده |
+| انتظار قطعه | مونتاژ, لغوشده |
+| کنترل کیفیت | آماده تحویل, مونتاژ (rework), لغوشده |
+| آماده تحویل | تحویل‌شده, تحویل جزئی, لغوشده |
+| تحویل جزئی | آماده تحویل, تحویل‌شده |
+| تحویل‌شده / لغوشده | — (terminal) |
+- Every change appends `{from,to,at}` to `order.history`; cancelling keeps the order. Invalid options are disabled in the existing status dropdown (same look) and rejected in code.
+
+**Open questions (not decided — current behaviour shown):**
+1. QC failure → back to assembly? (allowed as rework)
+2. Can waiting-for-parts happen before assembly or during QC? (only from assembly)
+3. Cancel after partial delivery? (blocked)
+4. Reopen a cancelled order, or step back from price approval? (blocked)
+5. Who may cancel / approve price? (no roles yet)
+
+**Data-integrity fixes:** order numbers are now sequential and unique (was last 4 digits of the clock); quantity must be a whole number ≥ 1; order must reference an existing customer; saved browser data of the wrong shape is ignored instead of breaking the screen; unknown saved statuses can't be moved. Not changed (pending decisions): money as text, dates as Persian text, tasks linked by customer name.
+
+**Checks run:** `vitest` 14/14 passed (13 new workflow tests); `tsgo` typecheck clean; preview build OK; create-order + status-change flow verified in the browser. ESLint reports only pre-existing Prettier formatting in the ported design code (left as-is to keep the code verbatim).
