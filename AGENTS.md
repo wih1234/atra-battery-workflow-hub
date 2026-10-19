@@ -8,3 +8,8 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## ATRA project rules
+- The ATRA UI ported from Figma Make (`src/components/atra/`, ATRA section of `src/styles.css`) is the approved design; reuse its CSS classes and variables for new screens instead of shadcn defaults, because visual identity must not drift.
+- Demo fixtures live in `src/components/atra/crm-data.ts` and must stay clearly labeled demo; never present them as real business metrics.
+- Browser storage must be read after mount (never in render/initializers) to avoid SSR hydration mismatches.
