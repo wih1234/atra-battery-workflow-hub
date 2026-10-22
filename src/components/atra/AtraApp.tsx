@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import { demoCustomers, demoOrders, demoTasks } from "./crm-data";
 import { MobileNav, Sidebar, type Page } from "./shared";
 import { Dashboard } from "./Dashboard";
@@ -9,13 +10,22 @@ import { TaskForm, TasksPage } from "./TasksPage";
 import { AssistantPage } from "./AssistantPage";
 import { transitionOrder } from "./order-workflow";
 import { usePersistentState } from "./usePersistentState";
+import { customerPath, pageFromPath, pagePaths } from "./atra-paths";
 
 export default function App() {
-  const [page, setPage] = useState<Page>("داشبورد");
+  // The screen comes from the URL so every section has its own direct link.
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { page, customerId } = pageFromPath(pathname);
   const [customers, setCustomers] = usePersistentState("ata-demo-customers", demoCustomers);
   const [orders, setOrders] = usePersistentState("ata-demo-orders", demoOrders);
   const [tasks, setTasks] = usePersistentState("ata-demo-tasks", demoTasks);
-  const [selectedCustomerId, setSelectedCustomerId] = useState(demoCustomers[0]?.id ?? "");
+  const selectedCustomerId = customerId ?? "";
+  const setSelectedCustomerId = (_id: string) => {};
+  const setPage = (next: Page, id?: string) => {
+    const to = next === "پرونده مشتری" ? customerPath(id ?? selectedCustomerId) : pagePaths[next];
+    void navigate({ to });
+  };
   const [modal, setModal] = useState<"customer" | "edit-customer" | "order" | "task" | null>(null);
   const selectedCustomer = customers.find((customer) => customer.id === selectedCustomerId) ?? customers[0];
 
