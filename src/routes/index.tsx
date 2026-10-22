@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import AtraApp from "@/components/atra/AtraApp";
-
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -19,5 +17,5 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: AtraApp,
+  component: () => null,
 });

@@ -4,7 +4,8 @@
 - [x] Split AtraApp.tsx per screen (pixel-identical)
 - [x] Order status transition rules + history + tests
 - [x] Safe data-integrity fixes (order ids, quantity, storage validation)
-- [ ] Per-page URLs
+- [x] Stage 0 baseline + Stage 1 per-page URLs (/, /customers, /customers/<id>, /orders, /tasks, /assistant)
+- [ ] Stages 2–11 per approved staged plan (.lovable/plan/), each needs separate approval
 - [ ] Task → customer id link
 - [ ] Order workflow open questions (blocked: user decisions, see audit §10)
 - [ ] Numeric money, real dates with Jalali display (blocked: currency decision)

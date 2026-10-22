@@ -15,3 +15,4 @@
 - Browser storage must be read after mount (never in render/initializers) to avoid SSR hydration mismatches.
 - Each ATRA screen lives in its own file under `src/components/atra/`; `AtraApp.tsx` only holds app state and wiring, so screens can change independently.
 - Order status changes go through the pure `order-workflow.ts` (allowed-transition table + append-only history), so rules are testable and never bypassed by the UI.
+- `AtraApp` is mounted once in `__root.tsx` and picks the screen from the URL via pure `atra-paths.ts`; leaf route files only provide address + head(), so state and saved data survive page changes.

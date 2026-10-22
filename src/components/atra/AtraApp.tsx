@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation, useRouter } from "@tanstack/react-router";
 import { demoCustomers, demoOrders, demoTasks } from "./crm-data";
 import { MobileNav, Sidebar, type Page } from "./shared";
 import { Dashboard } from "./Dashboard";
@@ -9,13 +10,21 @@ import { TaskForm, TasksPage } from "./TasksPage";
 import { AssistantPage } from "./AssistantPage";
 import { transitionOrder } from "./order-workflow";
 import { usePersistentState } from "./usePersistentState";
+import { customerPath, pageFromPath, pagePaths } from "./atra-paths";
 
 export default function App() {
-  const [page, setPage] = useState<Page>("داشبورد");
+  // The screen comes from the URL so every section has its own direct link.
+  const { pathname } = useLocation();
+  const router = useRouter();
+  const { page, customerId } = pageFromPath(pathname);
   const [customers, setCustomers] = usePersistentState("ata-demo-customers", demoCustomers);
   const [orders, setOrders] = usePersistentState("ata-demo-orders", demoOrders);
   const [tasks, setTasks] = usePersistentState("ata-demo-tasks", demoTasks);
-  const [selectedCustomerId, setSelectedCustomerId] = useState(demoCustomers[0]?.id ?? "");
+  const selectedCustomerId = customerId ?? "";
+  const setPage = (next: Page, id?: string) => {
+    const to = next === "پرونده مشتری" ? customerPath(id ?? selectedCustomerId) : pagePaths[next];
+    router.history.push(to);
+  };
   const [modal, setModal] = useState<"customer" | "edit-customer" | "order" | "task" | null>(null);
   const selectedCustomer = customers.find((customer) => customer.id === selectedCustomerId) ?? customers[0];
 
@@ -26,7 +35,7 @@ export default function App() {
   }
 
   function renderPage() {
-    if (page === "مشتریان") return <CustomersPage customers={customers} onCreate={() => setModal("customer")} onOpen={(customer) => { setSelectedCustomerId(customer.id); setPage("پرونده مشتری"); }}/>;
+    if (page === "مشتریان") return <CustomersPage customers={customers} onCreate={() => setModal("customer")} onOpen={(customer) => { setPage("پرونده مشتری", customer.id); }}/>;
     if (page === "پرونده مشتری" && selectedCustomer) return <CustomerProfile customer={selectedCustomer} orders={orders.filter((order) => order.customerId === selectedCustomer.id)} onBack={() => setPage("مشتریان")} onEdit={() => setModal("edit-customer")}/>;
     if (page === "سفارش‌ها") return <OrdersPage orders={orders} customers={customers} onCreate={() => setModal("order")} onStatusChange={(id, status) => setOrders((current) => current.map((order) => order.id === id ? transitionOrder(order, status).order : order))}/>;
     if (page === "وظایف و تقویم") return <TasksPage tasks={tasks} onCreate={() => setModal("task")} onToggle={(id) => setTasks((current) => current.map((task) => task.id === id ? { ...task, completed: !task.completed } : task))}/>;
@@ -39,7 +48,7 @@ export default function App() {
       <Sidebar page={page} setPage={setPage} openTasks={tasks.filter((task) => !task.completed).length}/>
       <div className="workspace">{renderPage()}</div>
       <MobileNav page={page} setPage={setPage} onQuickAdd={quickAdd}/>
-      {modal === "customer" && <CustomerForm onClose={() => setModal(null)} onSave={(customer) => { setCustomers((current) => [customer, ...current]); setModal(null); setSelectedCustomerId(customer.id); setPage("پرونده مشتری"); }}/>}
+      {modal === "customer" && <CustomerForm onClose={() => setModal(null)} onSave={(customer) => { setCustomers((current) => [customer, ...current]); setModal(null); setPage("پرونده مشتری", customer.id); }}/>}
       {modal === "edit-customer" && selectedCustomer && <CustomerForm customer={selectedCustomer} onClose={() => setModal(null)} onSave={(customer) => { setCustomers((current) => current.map((item) => item.id === customer.id ? customer : item)); setModal(null); }}/>}
       {modal === "order" && <OrderForm customers={customers} orders={orders} onClose={() => setModal(null)} onSave={(order) => { setOrders((current) => [order, ...current]); setModal(null); setPage("سفارش‌ها"); }}/>}
       {modal === "task" && <TaskForm customers={customers} onClose={() => setModal(null)} onSave={(task) => { setTasks((current) => [task, ...current]); setModal(null); setPage("وظایف و تقویم"); }}/>}

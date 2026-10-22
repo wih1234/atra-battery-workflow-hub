@@ -111,3 +111,7 @@ Phase 2 done (see §10). Next: per-page URLs, accessibility labels on icon-only 
 **Data-integrity fixes:** order numbers are now sequential and unique (was last 4 digits of the clock); quantity must be a whole number ≥ 1; order must reference an existing customer; saved browser data of the wrong shape is ignored instead of breaking the screen; unknown saved statuses can't be moved. Not changed (pending decisions): money as text, dates as Persian text, tasks linked by customer name.
 
 **Checks run:** `vitest` 14/14 passed (13 new workflow tests); `tsgo` typecheck clean; preview build OK; create-order + status-change flow verified in the browser. ESLint reports only pre-existing Prettier formatting in the ported design code (left as-is to keep the code verbatim).
+
+## 11. Stage 0–1 (2026-10-22)
+- Baseline: 14/14 tests, screenshots of 5 screens desktop + phone.
+- Each section has its own address; menus and browser back work; unknown addresses show the dashboard. 22/22 tests pass. After-screenshots identical to baseline except a 2×5px blinking text cursor on the assistant screen.
