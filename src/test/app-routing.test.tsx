@@ -15,3 +15,10 @@ describe("App routing", () => {
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
 });
+
+describe("ATRA page links", () => {
+  const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+  it.each(["/customers", "/customers/cus-101", "/orders", "/tasks", "/assistant"])("%s has its own page", (path) => {
+    expect(router.matchRoutes(path).at(-1)?.routeId).not.toBe(rootRouteId);
+  });
+});
