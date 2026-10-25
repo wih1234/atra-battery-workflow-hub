@@ -10,16 +10,23 @@ import {
   type OrderStatus,
 } from "./crm-data";
 import { Icon, Header, Modal, EmptyTab, type IconName, type Page } from "./shared";
+import { formatJalaliDate, parseJalaliDate } from "./dates";
 
 export function TaskForm({ customers, onSave, onClose }: { customers: Customer[]; onSave: (task: CrmTask) => void; onClose: () => void }) {
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+    const customerId = String(form.get("customer"));
+    const customer = customers.find((item) => item.id === customerId);
+    const dateIso = parseJalaliDate(form.get("date"));
+    if (!customer || dateIso === null) return;
     onSave({
       id: `task-${Date.now()}`,
       title: String(form.get("title")),
-      customer: String(form.get("customer")),
-      date: String(form.get("date")),
+      customer: customer.name,
+      customerId: customer.id,
+      date: formatJalaliDate(dateIso) ?? String(form.get("date")),
+      dateIso,
       time: String(form.get("time")),
       group: String(form.get("group")) as CrmTask["group"],
       type: String(form.get("type")) as CrmTask["type"],
@@ -29,7 +36,7 @@ export function TaskForm({ customers, onSave, onClose }: { customers: Customer[]
   return <Modal title="ثبت فعالیت جدید" description="پیگیری جدید را به برنامه کاری اضافه کنید." onClose={onClose}>
     <form className="crm-form" onSubmit={submit}>
       <label className="form-wide"><span>عنوان فعالیت</span><input name="title" required placeholder="مثلاً تماس برای تأیید پیش‌فاکتور"/></label>
-      <label><span>مشتری</span><select name="customer">{customers.map((customer) => <option key={customer.id}>{customer.name}</option>)}</select></label>
+      <label><span>مشتری</span><select name="customer">{customers.map((customer) => <option key={customer.id} value={customer.id}>{customer.name}</option>)}</select></label>
       <label><span>نوع فعالیت</span><select name="type"><option>تماس</option><option>جلسه</option><option>وظیفه</option><option>سفارش</option></select></label>
       <label><span>بازه زمانی</span><select name="group"><option>امروز</option><option>آینده</option><option>عقب‌افتاده</option></select></label>
       <label><span>تاریخ شمسی</span><input name="date" required placeholder="۲۶ مهر ۱۴۰۳"/></label>
