@@ -33,8 +33,14 @@ export type BatteryOrder = {
   customerId: string;
   batteryModel: string;
   quantity: number;
+  /** Display text in the existing «۴۲۰ میلیون» style; the page appends «تومان». */
   amount: string;
+  /** Exact Toman value. Set on new orders only; demo/older records stay text-only until an approved migration. */
+  amountValue?: number;
+  /** Shamsi display text such as «۱۰ آبان ۱۴۰۳». */
   deliveryDate: string;
+  /** ISO calendar date ("2024-10-31") behind the Shamsi display. New orders only. */
+  deliveryDateIso?: string;
   status: OrderStatus;
   /** Append-only status log; optional so older saved demo orders still load. */
   history?: { from: OrderStatus; to: OrderStatus; at: string }[];
@@ -43,8 +49,14 @@ export type BatteryOrder = {
 export type CrmTask = {
   id: string;
   title: string;
+  /** Customer name for display (unchanged rendering). */
   customer: string;
+  /** Customer id for new tasks, so renaming a customer never breaks the link. Older tasks keep the name only. */
+  customerId?: string;
+  /** Shamsi display text such as «۲۶ مهر ۱۴۰۳». */
   date: string;
+  /** ISO calendar date behind the Shamsi display. New tasks only. */
+  dateIso?: string;
   time: string;
   group: "امروز" | "آینده" | "عقب‌افتاده";
   type: "تماس" | "جلسه" | "وظیفه" | "سفارش";

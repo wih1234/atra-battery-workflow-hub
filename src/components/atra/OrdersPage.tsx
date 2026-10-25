@@ -10,6 +10,8 @@ import {
   type OrderStatus,
 } from "./crm-data";
 import { canTransition, nextOrderId, parseQuantity } from "./order-workflow";
+import { formatToman, parseTomanAmount } from "./money";
+import { formatJalaliDate, parseJalaliDate } from "./dates";
 import { Icon, Header, Modal, EmptyTab, type IconName, type Page } from "./shared";
 
 export const orderTone: Record<OrderStatus, string> = {
@@ -21,15 +23,19 @@ export function OrderForm({ customers, orders, onSave, onClose }: { customers: C
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const quantity = parseQuantity(form.get("quantity"));
+    const amountValue = parseTomanAmount(form.get("amount"));
+    const deliveryDateIso = parseJalaliDate(form.get("deliveryDate"));
     const customerId = String(form.get("customerId"));
-    if (quantity === null || !customers.some((customer) => customer.id === customerId)) return;
+    if (quantity === null || amountValue === null || deliveryDateIso === null || !customers.some((customer) => customer.id === customerId)) return;
     onSave({
       id: nextOrderId(orders),
       customerId,
       batteryModel: String(form.get("batteryModel")),
       quantity,
-      amount: String(form.get("amount")),
-      deliveryDate: String(form.get("deliveryDate")),
+      amount: formatToman(amountValue),
+      amountValue,
+      deliveryDate: formatJalaliDate(deliveryDateIso) ?? String(form.get("deliveryDate")),
+      deliveryDateIso,
       status: "ثبت سفارش",
     });
   }
