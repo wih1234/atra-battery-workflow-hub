@@ -22,7 +22,7 @@ export function parseJalaliDate(input: unknown): string | null {
   if (typeof input !== "string") return null;
   const parts = toLatinDigits(input).trim().split(/\s+/).filter(Boolean);
   if (parts.length !== 3) return null;
-  const [dayText, monthText, yearText] = parts;
+  const [dayText, monthText, yearText] = parts as [string, string, string];
   const day = Number(dayText);
   const year = Number(yearText);
   const month = (JALALI_MONTHS as readonly string[]).indexOf(monthText) + 1;
