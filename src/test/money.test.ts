@@ -51,6 +51,7 @@ describe("formatToman", () => {
 
   it("formats partial billions in the dashboard's «۱۲٫۴ میلیارد» style", () => {
     expect(formatToman(12_400_000_000)).toBe("۱۲٫۴ میلیارد");
+    expect(formatToman(parseTomanAmount("۱۲٫۴ میلیارد")!)).toBe("۱۲٫۴ میلیارد");
   });
 
   it("round-trips clean values", () => {
