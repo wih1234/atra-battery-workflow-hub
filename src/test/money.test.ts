@@ -47,7 +47,10 @@ describe("formatToman", () => {
 
   it("writes other amounts in full with Persian thousand separators", () => {
     expect(formatToman(1_500_000)).toBe("۱٬۵۰۰٬۰۰۰");
-    expect(formatToman(12_400_000_000)).toBe("۱۲٬۴۰۰٬۰۰۰٬۰۰۰");
+  });
+
+  it("formats partial billions in the dashboard's «۱۲٫۴ میلیارد» style", () => {
+    expect(formatToman(12_400_000_000)).toBe("۱۲٫۴ میلیارد");
   });
 
   it("round-trips clean values", () => {
