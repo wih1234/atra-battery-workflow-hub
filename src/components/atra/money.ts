@@ -58,6 +58,7 @@ export function parseTomanAmount(input: unknown): number | null {
 export function formatToman(amount: number): string {
   if (!Number.isInteger(amount) || amount <= 0) return "";
   if (amount % 1e9 === 0) return `${toPersianDigits(amount / 1e9)} میلیارد`;
+  if (amount >= 1e9 && amount % 1e6 === 0) return `${toPersianDigits(String(amount / 1e9).replace(".", "٫"))} میلیارد`;
   if (amount % 1e6 === 0) return `${toPersianDigits(amount / 1e6)} میلیون`;
   const grouped = String(amount).replace(/\B(?=(\d{3})+(?!\d))/g, "٬");
   return toPersianDigits(grouped);
