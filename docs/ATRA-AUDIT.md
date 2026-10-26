@@ -115,3 +115,11 @@ Phase 2 done (see §10). Next: per-page URLs, accessibility labels on icon-only 
 ## 11. Stage 0–1 (2026-10-22)
 - Baseline: 14/14 tests, screenshots of 5 screens desktop + phone.
 - Each section has its own address; menus and browser back work; unknown addresses show the dashboard. 22/22 tests pass. After-screenshots identical to baseline except a 2×5px blinking text cursor on the assistant screen.
+
+## 12. Stage 2 — money & dates (2026-10-25)
+- Owner confirmed: all amounts are **Toman** (تومان). Nothing converted from Rial.
+- New pure modules: `money.ts` (parse/format Toman; rejects «ریال» input, fractional Toman, non-numbers) and `dates.ts` (Jalali ↔ ISO via `jalaali-js`, the only dependency added; validates real Jalali dates incl. leap years).
+- Data model gained optional fields only: `BatteryOrder.amountValue` (exact Toman), `BatteryOrder.deliveryDateIso` (ISO date), `CrmTask.customerId`, `CrmTask.dateIso`. Demo fixtures and all existing saved records are byte-for-byte untouched.
+- Order/task forms now store the exact value + ISO date alongside the same Persian display text; new tasks link to the customer by id (renames no longer break them). Invalid amount/date input is rejected instead of saved (same silent pattern as the existing quantity check).
+- Existing records NOT migrated: see docs/MIGRATION-PLAN.md (separate plan, awaits owner approval).
+- Checks run: `vitest` 42/42 passed (13 new money/date tests); `tsgo` clean; preview build OK; browser-verified: new order saved with amountValue 12400000000 + deliveryDateIso, invalid amount not saved, new task saved with customerId + dateIso; desktop + phone screenshots of all screens and both forms pixel-identical to baseline.
