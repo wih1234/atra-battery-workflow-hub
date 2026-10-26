@@ -8,6 +8,7 @@ import { CustomerForm, CustomersPage } from "./CustomersPage";
 import { OrderForm, OrdersPage } from "./OrdersPage";
 import { TaskForm, TasksPage } from "./TasksPage";
 import { AssistantPage } from "./AssistantPage";
+import { MigrationPreview } from "./MigrationPreview";
 import { transitionOrder } from "./order-workflow";
 import { usePersistentState } from "./usePersistentState";
 import { customerPath, pageFromPath, pagePaths } from "./atra-paths";
@@ -35,6 +36,8 @@ export default function App() {
   }
 
   function renderPage() {
+    // Hidden read-only report; not linked from any menu. It only reads state.
+    if (pathname === "/migration-preview") return <MigrationPreview orders={orders} tasks={tasks} customers={customers}/>;
     if (page === "مشتریان") return <CustomersPage customers={customers} onCreate={() => setModal("customer")} onOpen={(customer) => { setPage("پرونده مشتری", customer.id); }}/>;
     if (page === "پرونده مشتری" && selectedCustomer) return <CustomerProfile customer={selectedCustomer} orders={orders.filter((order) => order.customerId === selectedCustomer.id)} onBack={() => setPage("مشتریان")} onEdit={() => setModal("edit-customer")}/>;
     if (page === "سفارش‌ها") return <OrdersPage orders={orders} customers={customers} onCreate={() => setModal("order")} onStatusChange={(id, status) => setOrders((current) => current.map((order) => order.id === id ? transitionOrder(order, status).order : order))}/>;

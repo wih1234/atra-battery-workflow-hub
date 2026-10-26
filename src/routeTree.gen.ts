@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssistantRouteImport } from './routes/assistant'
+import { Route as MigrationPreviewRouteImport } from './routes/migration-preview'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as CustomersIndexRouteImport } from './routes/customers.index'
@@ -24,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
 const AssistantRoute = AssistantRouteImport.update({
   id: '/assistant',
   path: '/assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MigrationPreviewRoute = MigrationPreviewRouteImport.update({
+  id: '/migration-preview',
+  path: '/migration-preview',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrdersRoute = OrdersRouteImport.update({
@@ -50,6 +56,7 @@ const CustomersIdRoute = CustomersIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
+  '/migration-preview': typeof MigrationPreviewRoute
   '/orders': typeof OrdersRoute
   '/tasks': typeof TasksRoute
   '/customers/$id': typeof CustomersIdRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
+  '/migration-preview': typeof MigrationPreviewRoute
   '/orders': typeof OrdersRoute
   '/tasks': typeof TasksRoute
   '/customers/$id': typeof CustomersIdRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
+  '/migration-preview': typeof MigrationPreviewRoute
   '/orders': typeof OrdersRoute
   '/tasks': typeof TasksRoute
   '/customers/$id': typeof CustomersIdRoute
@@ -75,14 +84,27 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/assistant' | '/orders' | '/tasks' | '/customers/$id' | '/customers/'
+    | '/'
+    | '/assistant'
+    | '/migration-preview'
+    | '/orders'
+    | '/tasks'
+    | '/customers/$id'
+    | '/customers/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/assistant' | '/orders' | '/tasks' | '/customers/$id' | '/customers'
+    | '/'
+    | '/assistant'
+    | '/migration-preview'
+    | '/orders'
+    | '/tasks'
+    | '/customers/$id'
+    | '/customers'
   id:
     | '__root__'
     | '/'
     | '/assistant'
+    | '/migration-preview'
     | '/orders'
     | '/tasks'
     | '/customers/$id'
@@ -92,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssistantRoute: typeof AssistantRoute
+  MigrationPreviewRoute: typeof MigrationPreviewRoute
   OrdersRoute: typeof OrdersRoute
   TasksRoute: typeof TasksRoute
   CustomersIdRoute: typeof CustomersIdRoute
@@ -112,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/assistant'
       fullPath: '/assistant'
       preLoaderRoute: typeof AssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/migration-preview': {
+      id: '/migration-preview'
+      path: '/migration-preview'
+      fullPath: '/migration-preview'
+      preLoaderRoute: typeof MigrationPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/orders': {
@@ -148,6 +178,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssistantRoute: AssistantRoute,
+  MigrationPreviewRoute: MigrationPreviewRoute,
   OrdersRoute: OrdersRoute,
   TasksRoute: TasksRoute,
   CustomersIdRoute: CustomersIdRoute,
