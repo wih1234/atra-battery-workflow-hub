@@ -36,7 +36,7 @@ describe("order amount preview", () => {
     const row = previewOrder(demoOrders[0]!); // ۱۰ آبان ۱۴۰۳
     const date = row.fields.find((f) => f.field === "تاریخ تحویل")!;
     expect(date.status).toBe("ready");
-    expect(date.proposed).toBe("2024-11-01");
+    expect(date.proposed).toBe("2024-10-31");
   });
 });
 
